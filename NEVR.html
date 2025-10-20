@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="NEVR WebRaider">
+  <meta property="og:title" content="NEVR WebRaider">
+  <title>NEVR WebRaider</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #2d3748; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb { background: #4a5568; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #718096; }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background: linear-gradient(135deg, #1a202c, #2d3748);
+      color: #e2e8f0;
+      margin: 0; padding: 0;
+      display: flex; justify-content: center; align-items: flex-start;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .card {
+      background: rgba(45, 55, 72, 0.95);
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5),
+                  0 0 0 1px rgba(66, 153, 225, 0.1);
+      width: 100%; max-width: 850px;
+      animation: slideIn 0.6s ease;
+      overflow: auto; max-height: 95vh;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(66, 153, 225, 0.15);
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-30px) scale(0.98); }
+      to   { opacity: 1; transform: translateX(0) scale(1); }
+    }
+    
+    .header {
+      text-align: left;
+      margin-bottom: 25px;
+      position: relative;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #4299e1;
+    }
+    
+    h2 {
+      background: linear-gradient(135deg, #4299e1, #48bb78);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 0 0 5px;
+      font-weight: 700;
+      font-size: 2.2rem;
+      letter-spacing: -0.5px;
+    }
+    
+    .subtitle {
+      color: #a0aec0;
+      font-size: 0.9rem;
+      margin-bottom: 3px;
+    }
+    
+    .brand {
+      color: #48bb78;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    
+    .section {
+      margin-bottom: 20px;
+      background: rgba(74, 85, 104, 0.6);
+      padding: 18px;
+      border-radius: 10px;
+      border: 1px solid #4a5568;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      color: #4299e1;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    
+    .section-title i {
+      font-size: 1.1rem;
+    }
+    
+    label {
+      display: block;
+      margin-top: 12px;
+      font-size: 13px;
+      color: #e2e8f0;
+      font-weight: 500;
+    }
+    
+    label:first-child {
+      margin-top: 0;
+    }
+
+    input[type="text"], textarea {
+      width: 100%; padding: 10px; margin-top: 6px;
+      border-radius: 8px; border: 1px solid #4a5568;
+      background: #2d3748; color: #e2e8f0;
+      font-family: 'Roboto Mono', monospace; 
+      resize: vertical;
+      transition: all 0.2s;
+      font-size: 13px;
+    }
+    
+    input[type="text"]:focus, textarea:focus {
+      outline: none;
+      border-color: #4299e1;
+      box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.1);
+    }
+    
+    input[type="number"] {
+      padding: 6px; margin-top: 4px;
+      border-radius: 6px; border: 1px solid #4a5568;
+      background: #2d3748; color: #e2e8f0;
+      font-family: 'Roboto Mono', monospace; appearance: none;
+      width: 80px;
+      transition: all 0.2s;
+    }
+    
+    input[type="number"]:focus {
+      outline: none;
+      border-color: #4299e1;
+      box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.1);
+    }
+    
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none; margin: 0;
+    }
+
+    .file-input-container {
+      position: relative;
+      margin-top: 6px;
+    }
+    
+    .file-input-label {
+      display: block;
+      padding: 12px;
+      border: 2px dashed #4a5568;
+      border-radius: 8px;
+      background: #2d3748;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #a0aec0;
+      font-size: 13px;
+    }
+    
+    .file-input-label:hover {
+      border-color: #4299e1;
+      background: #374151;
+      color: #4299e1;
+    }
+    
+    .file-input-label i {
+      margin-right: 6px;
+      font-size: 1rem;
+    }
+    
+    .file-input-label.has-file {
+      border-color: #48bb78;
+      color: #48bb78;
+      background: rgba(72, 187, 120, 0.1);
+    }
+    
+    #messageFile {
+      position: absolute;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      cursor: pointer;
+    }
+    
+    .file-name {
+      margin-top: 4px;
+      font-size: 11px;
+      color: #48bb78;
+      text-align: center;
+    }
+
+    .row {
+      display: flex; gap: 12px; align-items: flex-end;
+      flex-wrap: wrap;
+    }
+    
+    .row > * { flex: none; }
+    .row label,
+    .row .checkbox-container { margin-top: 0; }
+
+    .checkbox-container {
+      display: flex; align-items: center; gap: 8px;
+      cursor: pointer; font-size: 13px; user-select: none;
+      margin-top: 8px;
+      padding: 6px 0;
+    }
+    
+    .checkbox-container input {
+      appearance: none; width: 44px; height: 22px;
+      background: #4a5568; border-radius: 20px;
+      position: relative; transition: all 0.2s ease;
+    }
+    
+    .checkbox-container:hover input { background: #718096; }
+    
+    .checkbox-container input:focus {
+      outline: none; box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.3);
+    }
+    
+    .checkbox-container input::before {
+      content: ''; position: absolute;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: #fff; top: 3px; left: 3px;
+      transition: transform 0.2s ease;
+    }
+    
+    .checkbox-container input:checked { 
+      background: linear-gradient(135deg, #4299e1, #48bb78);
+    }
+    
+    .checkbox-container input:checked::before {
+      transform: translateX(22px);
+    }
+    
+    .checkbox-container span { 
+      transition: color 0.2s;
+      color: #cbd5e0;
+    }
+    
+    .checkbox-container input:checked + span {
+      color: #48bb78;
+      font-weight: 600;
+    }
+
+    .language-options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
+    
+    .language-option {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      background: rgba(74, 85, 104, 0.8);
+      border-radius: 6px;
+      border: 1px solid #4a5568;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    
+    .language-option:hover {
+      background: rgba(113, 128, 150, 0.8);
+      border-color: #718096;
+    }
+    
+    .language-option.selected {
+      background: rgba(66, 153, 225, 0.2);
+      border-color: #4299e1;
+    }
+    
+    .language-option input {
+      margin: 0;
+    }
+    
+    .language-option span {
+      font-size: 12px;
+      color: #e2e8f0;
+    }
+
+    button.primary {
+      margin-top: 20px; width: 100%; padding: 14px;
+      border: none; border-radius: 10px;
+      background: linear-gradient(135deg, #4299e1, #48bb78);
+      color: #fff; font-weight: 600; font-size: 16px;
+      letter-spacing: 0.5px; cursor: pointer; position: relative;
+      overflow: hidden; transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+    }
+    
+    button.primary:hover {
+      background: linear-gradient(135deg, #3182ce, #38a169);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(66, 153, 225, 0.4);
+    }
+    
+    button.primary:active {
+      transform: translateY(0);
+    }
+    
+    button.primary.loading {
+      color: #ffffffa2; pointer-events: none;
+      background: linear-gradient(135deg, #718096, #a0aec0);
+    }
+
+    button.secondary {
+      margin-top: 8px; padding: 8px 14px;
+      background: linear-gradient(135deg, #4a5568, #718096);
+      color: #fff; font-size: 12px; border: none; border-radius: 6px;
+      position: relative; overflow: hidden;
+      transition: all 0.2s;
+      font-weight: 500;
+    }
+    
+    button.secondary:hover {
+      background: linear-gradient(135deg, #718096, #a0aec0);
+      transform: translateY(-1px);
+    }
+
+    #stopSpam, #leaveBtn {
+      width: 48%; padding: 10px;
+      border: none; border-radius: 8px;
+      background: linear-gradient(135deg, #e53e3e, #c53030);
+      color: #fff; font-weight: 600; font-size: 12px;
+      cursor: pointer; transition: all 0.2s;
+      margin-top: 12px;
+      box-shadow: 0 3px 10px rgba(229, 62, 62, 0.3);
+    }
+    
+    #stopSpam:hover, #leaveBtn:hover {
+      background: linear-gradient(135deg, #c53030, #9b2c2c);
+      transform: translateY(-1px);
+      box-shadow: 0 5px 15px rgba(229, 62, 62, 0.4);
+    }
+    
+    #stopSpam:active, #leaveBtn:active {
+      transform: translateY(0);
+    }
+
+    .button-container {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    details { 
+      margin-top: 16px; 
+      background: rgba(74, 85, 104, 0.6);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #4a5568;
+    }
+    
+    summary { 
+      list-style: none; 
+      padding: 12px 16px; 
+      cursor: pointer; 
+      font-weight: 600; 
+      position: relative; 
+      margin-top: 0;
+      color: #48bb78;
+      transition: all 0.2s;
+      font-size: 13px;
+    }
+    
+    summary:hover {
+      background: rgba(72, 187, 120, 0.1);
+    }
+    
+    summary::-webkit-details-marker { display: none; }
+    summary::marker { content: none; }
+    
+    summary::before { 
+      content: '▶'; 
+      position: absolute; 
+      left: 12px; 
+      top: 50%; 
+      transform: translateY(-50%); 
+      transition: transform 0.2s ease;
+      font-size: 0.7rem;
+    }
+    
+    details[open] > summary::before { 
+      transform: translateY(-50%) rotate(90deg);
+    }
+    
+    .detail-content { 
+      padding: 0 16px 12px 16px;
+      transform-origin: top center; 
+      transform: scaleY(0); 
+      opacity: 0; 
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    
+    details[open] .detail-content { 
+      transform: scaleY(1); 
+      opacity: 1;
+    }
+
+    #log { 
+      margin-top: 16px; 
+      padding: 12px; 
+      height: 120px; 
+      overflow-y: auto; 
+      background: #2d3748; 
+      border-radius: 8px; 
+      font-family: 'Roboto Mono', monospace; 
+      font-size: 12px; 
+      white-space: pre-wrap; 
+      resize: vertical;
+      border: 1px solid #4a5568;
+    }
+    
+    .log-entry {
+      margin: 4px 0;
+      padding: 2px 0;
+      border-bottom: 1px solid #4a5568;
+    }
+    
+    .log-time {
+      color: #48bb78;
+      font-weight: 600;
+    }
+    
+    .log-success { color: #48bb78; }
+    .log-error { color: #e53e3e; }
+    .log-warning { color: #ed8936; }
+    .log-info { color: #4299e1; }
+    
+    @media (max-width: 768px) {
+      .card {
+        padding: 18px;
+        max-width: 100%;
+        border-radius: 12px;
+      }
+      
+      h2 { font-size: 1.8rem; }
+      
+      .row { flex-direction: column; align-items: stretch; }
+      .row label { width: 100%; }
+      
+      .button-container { flex-direction: column; }
+      #stopSpam, #leaveBtn { width: 100%; }
+      
+      input[type="number"] { width: 100%; }
+      
+      .language-options {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    small { 
+      color: #a0aec0; 
+      font-size: 11px; 
+      display: block; 
+      margin-top: 4px;
+      font-style: italic;
+    }
+    
+    .example {
+      color: #a0aec0;
+      font-size: 11px;
+      margin-top: 2px;
+      font-family: 'Roboto Mono', monospace;
+    }
+
+    .message-options {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    
+    .message-option-btn {
+      flex: 1;
+      padding: 8px;
+      background: rgba(74, 85, 104, 0.8);
+      border: 1px solid #4a5568;
+      border-radius: 6px;
+      color: #cbd5e0;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+      font-size: 12px;
+    }
+    
+    .message-option-btn.active {
+      background: rgba(66, 153, 225, 0.2);
+      border-color: #4299e1;
+      color: #4299e1;
+    }
+    
+    .message-input-container {
+      display: none;
+    }
+    
+    .message-input-container.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <h2>NEVR WebRaider</h2>
+      <div class="subtitle">WebRaider</div>
+      <div class="brand">NEVR</div>
+    </div>
+    
+    <form id="form">
+      <div class="section">
+        <div class="section-title">
+          <i class="fas fa-key"></i>
+          <span>使用token設定</span>
+        </div>
+        
+        <label>tokenリスト
+          <textarea id="tokens" rows="4" placeholder="tokenをカンマ、改行、またはスペースで区切って入力"></textarea>
+          <div class="example">例: MtMisg...</div>
+        </label>
+
+        <label>サーバーID
+          <input type="text" id="guildId" required placeholder="サーバーIDを入力">
+          <div class="example">例: 1234567890</div>
+        </label>
+
+        <label>チャンネルIDリスト
+          <textarea id="channelIds" rows="2" placeholder="チャンネルIDをカンマ、改行、またはスペースで区切って入力"></textarea>
+          <div class="example">例: 1111111111111111, 2222222222222222</div>
+        </label>
+        <button type="button" id="autoFillChannels" class="secondary">
+          <i class="fas fa-sync-alt"></i> チャンネル自動取得
+        </button>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <i class="fas fa-file-alt"></i>
+          <span>メッセージ設定</span>
+        </div>
+        
+        <div class="message-options">
+          <button type="button" class="message-option-btn active" data-option="file">ファイル入力</button>
+          <button type="button" class="message-option-btn" data-option="text">テキスト入力</button>
+        </div>
+
+        <div class="message-input-container active" id="fileInputContainer">
+          <label>メッセージファイル</label>
+          <div class="file-input-container">
+            <input type="file" id="messageFile" accept=".txt">
+            <label for="messageFile" class="file-input-label" id="fileInputLabel">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <span>クリックしてテキストファイルを選択</span>
+            </label>
+          </div>
+          <div class="file-name" id="fileName">ファイルが選択されていません</div>
+          <small>選択したテキストファイルの内容全体が1つのメッセージとして送信されます</small>
+        </div>
+
+        <div class="message-input-container" id="textInputContainer">
+          <label>メッセージテキスト
+            <textarea id="messageText" rows="4" placeholder="送信するメッセージを直接入力してください"></textarea>
+          </label>
+          <small>直接入力したテキストがメッセージとして送信されます</small>
+        </div>
+
+        <label class="checkbox-container">
+          <input type="checkbox" id="allmention" checked>
+          <span>@everyoneを追加</span>
+        </label>
+        
+        <label class="checkbox-container">
+          <input type="checkbox" id="randomize">
+          <span>メッセージをランダマイズ（UUID追加）</span>
+        </label>
+
+        <label>ランダム言語テキスト追加</label>
+        <div class="language-options">
+          <label class="language-option" id="arabicOption">
+            <input type="checkbox" id="addArabic">
+            <span>アラビア語</span>
+          </label>
+          <label class="language-option" id="japaneseOption">
+            <input type="checkbox" id="addJapanese">
+            <span>日本語</span>
+          </label>
+          <label class="language-option" id="koreanOption">
+            <input type="checkbox" id="addKorean">
+            <span>韓国語</span>
+          </label>
+          <label class="language-option" id="chineseOption">
+            <input type="checkbox" id="addChinese">
+            <span>中国語</span>
+          </label>
+        </div>
+        <small>チェックした言語のランダムテキストがメッセージに追加されます</small>
+        
+        <div class="row">
+          <label>送信間隔
+            <input type="number" id="delay" min="0" step="0.1" placeholder="0"> 秒
+          </label>
+          <label>送信上限
+            <input type="number" id="limit" min="1" step="1" placeholder="無制限"> 回
+          </label>
+        </div>
+      </div>
+
+      <details>
+        <summary><i class="fas fa-users"></i> メンション設定</summary>
+        <div class="detail-content">
+          <label>メンションするユーザーIDリスト
+            <textarea id="mentionIds" rows="2" placeholder="ユーザーIDをカンマ、改行、またはスペースで区切って入力"></textarea>
+            <div class="example">例: 1111111111111111, 2222222222222222</div>
+          </label>
+          <button type="button" id="fetchMentions" class="secondary">
+            <i class="fas fa-user-friends"></i> メンション自動取得
+          </button>
+        </div>
+      </details>
+
+      <details>
+        <summary><i class="fas fa-poll"></i> 投票設定</summary>
+        <div class="detail-content">
+          <label>投票タイトル
+            <input type="text" id="pollTitle" placeholder="投票のタイトルを入力">
+          </label>
+          <label>投票選択肢
+            <textarea id="pollAnswers" rows="2" placeholder="選択肢をカンマ、改行、またはスペースで区切って入力"></textarea>
+            <div class="example">例: 選択肢1, 選択肢2, 選択肢3</div>
+          </label>
+        </div>
+      </details>
+
+      <button id="submitBtn" type="submit" class="primary" disabled>
+        <i class="fas fa-play"></i> 実行開始
+      </button>
+    </form>
+    
+    <div class="button-container">
+      <button id="stopSpam" class="secondary" disabled>
+        <i class="fas fa-stop"></i> 送信停止
+      </button>
+      <button id="leaveBtn" class="secondary">
+        <i class="fas fa-sign-out-alt"></i> サーバー退出
+      </button>
+    </div>
+
+    <div id="log"></div>
+  </div>
+
+  <script>
+    // ここにJavaScriptコードをそのまま挿入
+    const logEl = document.getElementById('log');
+    const x_super_properties = 'eyJvcyI6IldpbmRvd3MiLCJicm93c2VyIjoiQ2hyb21lIiwiZGV2aWNlIjoiIiwic3lzdGVtX2xvY2FsZSI6ImVuLVVTIiwiaGFzX2NsaWVudF9tb2RzIjpmYWxzZSwiYnJvd3Nlcl91c2VyX2FnZW50IjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEzNC4wLjAuMCBTYWZhcmkvNTM3LjM2IiwiYnJvd3Nlcl92ZXJzaW9uIjoiMTM0LjAuMC4wIiwib3NfdmVyc2lvbiI6IjEwIiwicmVmZXJyZXIiOiJodHRwczovL2Rpc2NvcmQuY29tIiwicmVmZXJyaW5nX2RvbWFpbiI6ImRpc2NvcmQuY29tIiwicmVmZXJyZXJfY3VycmVudCI6IiIsInJlZmVycmluZ19kb21haW5fY3VycmVudCI6IiIsInJlbGVhc2VfY2hhbm5lbCI6InN0YWJsZSIsImNsaWVudF9idWlsZF9udW1iZXIiOjM4NDg4NywiY2xpZW50X2V2ZW50X3NvdXJjZSI6bnVsbH0=';
+
+    function appendLog(message) {
+        const timestamp = new Date().toLocaleTimeString();
+        logEl.textContent += '\n' + timestamp + ' | ' + message;
+        logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    function clearLog() {
+        logEl.textContent = '';
+    }
+
+    let shouldStopSpam = false;
+    let messageContent = '';
+
+    const tokensInput = document.getElementById('tokens');
+    const guildInput = document.getElementById('guildId');
+    const channelInput = document.getElementById('channelIds');
+    const messageFileInput = document.getElementById('messageFile');
+    const messageTextInput = document.getElementById('messageText');
+    const randomizeCheckbox = document.getElementById('randomize');
+    const allmentionCheckbox = document.getElementById('allmention');
+    const delayInput = document.getElementById('delay');
+    const limitInput = document.getElementById('limit');
+    const mentionInput = document.getElementById('mentionIds');
+    const pollTitleInput = document.getElementById('pollTitle');
+    const pollAnswersInput = document.getElementById('pollAnswers');
+    const autoFillBtn = document.getElementById('autoFillChannels');
+    const fetchMentionsBtn = document.getElementById('fetchMentions');
+    const submitBtn = document.getElementById('submitBtn');
+    const stopBtn = document.getElementById('stopSpam');
+    const leaveBtn = document.getElementById('leaveBtn');
+    const form = document.getElementById('form');
+
+    const addArabicCheckbox = document.getElementById('addArabic');
+    const addJapaneseCheckbox = document.getElementById('addJapanese');
+    const addKoreanCheckbox = document.getElementById('addKorean');
+    const addChineseCheckbox = document.getElementById('addChinese');
+
+    const randomTexts = {
+        arabic: [
+            "مرحبا بالعالم",
+            "كيف حالك اليوم؟",
+            "هذا نص عربي عشوائي",
+            "التقنية تتطور بسرعة",
+            "الطبيعة جميلة ورائعة",
+            "الشمس تشرق من الشرق",
+            "الحياة مليئة بالمفاجآت",
+            "التعلم مستمر مدى الحياة",
+            "الصداقة كنز ثمين",
+            "السفر يوسع الآفاق"
+        ],
+        japanese: [
+            "こんにちは、世界",
+            "今日はどうですか？",
+            "これはランダムな日本語のテキストです",
+            "テクノロジーは急速に進化しています",
+            "自然は美しく素晴らしい",
+            "太陽は東から昇ります",
+            "人生は驚きに満ちています",
+            "学習は生涯続くプロセスです",
+            "友情は貴重な宝物です",
+            "旅行は視野を広げます"
+        ],
+        korean: [
+            "안녕하세요, 세계",
+            "오늘 어떠세요?",
+            "이것은 무작위 한국어 텍스트입니다",
+            "기술은 빠르게 발전하고 있습니다",
+            "자연은 아름답고 훌륭합니다",
+            "태양은 동쪽에서 떠오릅니다",
+            "인생은 놀라움으로 가득합니다",
+            "학습은 평생 지속되는 과정입니다",
+            "우정은 소중한 보물입니다",
+            "여행은 시야를 넓힙니다"
+        ],
+        chinese: [
+            "你好，世界",
+            "你今天怎么样？",
+            "这是随机的中文文本",
+            "技术正在快速发展",
+            "自然美丽而奇妙",
+            "太阳从东方升起",
+            "生活充满惊喜",
+            "学习是终身的过程",
+            "友谊是珍贵的财富",
+            "旅行开阔视野"
+        ]
+    };
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function parseList(input) {
+        const items = input.split(/[\s,]+/).map(item => item.trim()).filter(item => item);
+        return [...new Set(items)];
+    }
+
+    function generateRandomLanguageText() {
+        const selectedLanguages = [];
+        
+        if (addArabicCheckbox.checked) selectedLanguages.push('arabic');
+        if (addJapaneseCheckbox.checked) selectedLanguages.push('japanese');
+        if (addKoreanCheckbox.checked) selectedLanguages.push('korean');
+        if (addChineseCheckbox.checked) selectedLanguages.push('chinese');
+        
+        if (selectedLanguages.length === 0) return '';
+        
+        const randomLanguage = selectedLanguages[Math.floor(Math.random() * selectedLanguages.length)];
+        const texts = randomTexts[randomLanguage];
+        const randomText = texts[Math.floor(Math.random() * texts.length)];
+        
+        return randomText;
+    }
+
+    function getMessageInputType() {
+        const fileOption = document.querySelector('.message-option-btn[data-option="file"]');
+        return fileOption.classList.contains('active') ? 'file' : 'text';
+    }
+
+    function getMessageContent() {
+        const inputType = getMessageInputType();
+        
+        if (inputType === 'file') {
+            return messageContent;
+        } else {
+            return messageTextInput.value;
+        }
+    }
+
+    async function leaveGuild(token, guildId) {
+        const response = await fetch(`https://discord.com/api/v9/users/@me/guilds/${guildId}`, {
+            'method': 'DELETE',
+            'headers': {
+                'Authorization': token,
+                'Content-Type': 'application/json',
+                'x-super-properties': x_super_properties
+            },
+            'body': JSON.stringify({'lurking': false}),
+            'referrerPolicy': 'no-referrer'
+        });
+        
+        if (response.status === 204) {
+            appendLog('✅ 退出成功: ' + token.slice(0, 10) + '*****');
+        } else {
+            appendLog('❌ ' + token.slice(0, 10) + '***** - 退出失敗(' + JSON.stringify(await response.json()) + ')');
+        }
+    }
+
+    messageFileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                messageContent = e.target.result;
+                appendLog('✅ ファイル読み込み完了: ' + file.name);
+                checkFormValidity();
+            };
+            reader.readAsText(file);
+        }
+    });
+
+    if (messageTextInput) {
+        messageTextInput.addEventListener('input', function() {
+            checkFormValidity();
+        });
+    }
+
+    autoFillBtn.addEventListener('click', async () => {
+        clearLog();
+        const tokens = parseList(tokensInput.value);
+        const guildId = guildInput.value.trim();
+        
+        if (!tokens.length) return appendLog('⚠️ トークンを入力してください');
+        if (!guildId) return appendLog('⚠️ サーバーIDを入力してください');
+        
+        try {
+            const response = await fetch(`https://discord.com/api/v9/guilds/${guildId}/channels`, {
+                'headers': {
+                    'Authorization': tokens[0],
+                    'Content-Type': 'application/json',
+                    'x-super-properties': x_super_properties
+                },
+                'referrerPolicy': 'no-referrer'
+            });
+            
+            if (!response.ok) throw new Error(JSON.stringify(await response.json()));
+            
+            const channels = await response.json();
+            const textChannels = channels.filter(channel => channel.type === 0).map(channel => channel.id);
+            
+            if (!textChannels.length) return appendLog('チャンネルが見つかりません');
+            
+            channelInput.value = textChannels.join(',');
+            appendLog('✅ チャンネル取得完了');
+        } catch (error) {
+            appendLog('❌ エラー：' + error.message);
+        }
+    });
+
+    fetchMentionsBtn.addEventListener('click', async () => {
+        clearLog();
+        const tokens = parseList(tokensInput.value);
+        const guildId = guildInput.value.trim();
+        const channels = parseList(channelInput.value);
+        
+        if (!tokens.length) return appendLog('⚠️ トークンを入力してください');
+        if (!guildId) return appendLog('⚠️ サーバーIDを入力してください');
+        if (!channels.length) return appendLog('⚠️ チャンネルIDを入力してください');
+        
+        const ws = new WebSocket('wss://gateway.discord.gg/?v=9&encoding=json');
+        
+        ws.onopen = () => {
+            ws.send(JSON.stringify({
+                'op': 2,
+                'd': {
+                    'token': tokens[0],
+                    'properties': {'os':'Windows','browser':'Discord','device':'pc'},
+                    'intents': 1 << 12
+                }
+            }));
+        };
+        
+        ws.onmessage = event => {
+            const data = JSON.parse(event.data);
+            
+            if (data.op === 0 && data.t === 'READY') {
+                ws.send(JSON.stringify({
+                    'op': 14,
+                    'd': {
+                        'guild_id': guildId,
+                        'typing': false,
+                        'activities': false,
+                        'threads': true,
+                        'channels': {[channels[0]]: [[0, 0]]}
+                    }
+                }));
+            }
+            
+            if (data.t === 'GUILD_MEMBER_LIST_UPDATE') {
+                const members = data.d.ops[0].items.map(item => item.member).filter(member => member);
+                const userIds = members.map(member => member.user.id);
+                
+                if (userIds.length) {
+                    mentionInput.value = userIds.join(',');
+                    appendLog('✅ メンション取得完了');
+                } else {
+                    appendLog('メンションが見つかりません');
+                }
+                ws.close();
+            }
+        };
+        
+        ws.onerror = () => {
+            appendLog('❌ WebSocketエラー');
+            ws.close();
+        };
+    });
+
+    async function authenticateOnly(token) {
+        return new Promise(resolve => {
+            const ws = new WebSocket('wss://gateway.discord.gg/?v=9&encoding=json');
+            
+            ws.onopen = () => {
+                ws.send(JSON.stringify({
+                    'op': 2,
+                    'd': {
+                        'token': token,
+                        'properties': {'os':'Windows','browser':'Discord','device':'pc'},
+                        'intents': 0
+                    }
+                }));
+            };
+            
+            ws.onmessage = event => {
+                const data = JSON.parse(event.data);
+                if (data.t === 'READY') {
+                    appendLog('✅ 認証完了: ' + token.slice(0, 10) + '*****');
+                    ws.close();
+                    resolve(true);
+                } else if (data.t === 'INVALID_SESSION') {
+                    appendLog('❌ 認証失敗: ' + token.slice(0, 10) + '*****');
+                    ws.close();
+                    resolve(false);
+                }
+            };
+            
+            ws.onerror = () => {
+                appendLog('❌ WebSocket エラー: ' + token.slice(0, 10) + '*****');
+                ws.close();
+                resolve(false);
+            };
+            
+            ws.onclose = () => {
+                resolve(false);
+            };
+        });
+    }
+
+    async function sendMessage(token, channelId, message, options = {}) {
+        const headers = {
+            'Authorization': token,
+            'Content-Type': 'application/json',
+            'x-super-properties': x_super_properties
+        };
+        
+        let finalMessage = message || '';
+        
+        if (options.addRandomLanguage) {
+            const randomText = generateRandomLanguageText();
+            if (randomText) {
+                finalMessage += '\n' + randomText;
+            }
+        }
+        
+        let payload = {'content': finalMessage};
+        
+        if (options.randomize) {
+            payload.content += '\n' + crypto.randomUUID();
+        }
+        
+        if (options.allmention) {
+            payload.content = '@everyone\n' + payload.content;
+        }
+        
+        if (options.randomMentions) {
+            const randomMention = options.randomMentions[Math.floor(Math.random() * options.randomMentions.length)];
+            payload.content = '<@' + randomMention + '>\n' + payload.content;
+        }
+        
+        if (options.pollTitle && options.pollAnswers) {
+            payload.poll = {
+                'question': {'text': options.pollTitle},
+                'answers': options.pollAnswers.map(answer => ({'poll_media': {'text': answer.trim()}})),
+                'allow_multiselect': false,
+                'duration': 1,
+                'layout_type': 1
+            };
+        }
+        
+        const response = await fetch(`https://discord.com/api/v9/channels/${channelId}/messages`, {
+            'method': 'POST',
+            'headers': headers,
+            'body': JSON.stringify(payload),
+            'referrerPolicy': 'no-referrer'
+        });
+        
+        return response;
+    }
+
+    async function sendMessageWithRetry(token, channelId, message, options = {}, maxRetries = 5, baseDelay = 3000) {
+        let retryCount = 0;
+        
+        while (retryCount < maxRetries) {
+            try {
+                const response = await sendMessage(token, channelId, message, options);
+                
+                if (response.ok) {
+                    appendLog('✅ ' + token.slice(0, 10) + '***** - メッセージ送信成功');
+                    return true;
+                } else {
+                    if (response.status === 429) {
+                        const data = await response.json();
+                        const delay = (data.retry_after || 1) * 1000;
+                        appendLog('⏳  ' + token.slice(0, 10) + '***** - レート制限: ' + delay/1000 + 's');
+                        await sleep(delay);
+                        retryCount++;
+                    } else if (response.status === 400) {
+                        const data = await response.json();
+                        appendLog('❌ ' + token.slice(0, 10) + '***** - 送信エラー(' + response.status + '): ' + (JSON.stringify(data) || '詳細不明'));
+                        const authtest = await authenticateOnly(token);
+                        if (!authtest) return false;
+                    } else {
+                        const data = await response.json();
+                        appendLog('❌ ' + token.slice(0, 10) + '***** - 送信エラー(' + response.status + '): ' + (JSON.stringify(data) || '詳細不明'));
+                        return false;
+                    }
+                }
+            } catch (error) {
+                appendLog('❌ ' + token.slice(0, 10) + '***** - エラー: ' + error.message + ' | 再試行中...');
+                await sleep(baseDelay);
+                retryCount++;
+            }
+        }
+        
+        appendLog('❌ ' + token.slice(0, 10) + '***** - 最大リトライ回数に達しました。');
+        return false;
+    }
+
+    function checkFormValidity() {
+        const hasTokens = tokensInput.value.trim();
+        const hasGuildId = guildInput.value.trim();
+        
+        const inputType = getMessageInputType();
+        let hasMessage = false;
+        
+        if (inputType === 'file') {
+            hasMessage = messageContent.trim();
+        } else {
+            hasMessage = messageTextInput.value.trim();
+        }
+        
+        submitBtn.disabled = !(hasTokens && hasGuildId && hasMessage);
+    }
+
+    tokensInput.addEventListener('input', checkFormValidity);
+    guildInput.addEventListener('input', checkFormValidity);
+    messageFileInput.addEventListener('change', checkFormValidity);
+    if (messageTextInput) {
+        messageTextInput.addEventListener('input', checkFormValidity);
+    }
+    checkFormValidity();
+
+    form.addEventListener('submit', async event => {
+        event.preventDefault();
+        
+        const message = getMessageContent();
+        if (!message.trim()) {
+            appendLog('⚠️ メッセージを入力またはファイルを選択してください');
+            return;
+        }
+        
+        submitBtn.disabled = true;
+        submitBtn.classList.add('loading');
+        submitBtn.textContent = '実行中...';
+        shouldStopSpam = false;
+        stopBtn.disabled = false;
+        
+        const tokens = parseList(tokensInput.value);
+        const guildId = guildInput.value.trim();
+        const channels = parseList(channelInput.value);
+        const randomize = randomizeCheckbox.checked;
+        const allmention = allmentionCheckbox.checked;
+        const delay = parseFloat(delayInput.value) || 0;
+        const limit = limitInput.value.trim() ? parseInt(limitInput.value) : Infinity;
+        const mentions = mentionInput.value.trim() ? parseList(mentionInput.value) : null;
+        const pollTitle = pollTitleInput.value.trim() || null;
+        const pollAnswers = pollAnswersInput.value.trim() ? parseList(pollAnswersInput.value) : null;
+        
+        const addRandomLanguage = addArabicCheckbox.checked || addJapaneseCheckbox.checked || addKoreanCheckbox.checked || addChineseCheckbox.checked;
+        
+        let messageCount = 0;
+        
+        const sendPromises = tokens.map(token => {
+            return async () => {
+                let channelIndex = 0;
+                while (!shouldStopSpam && messageCount < limit) {
+                    if (channelIndex >= channels.length) channelIndex = 0;
+                    const channelId = channels[channelIndex];
+                    channelIndex++;
+                    
+                    const success = await sendMessageWithRetry(
+                        token, 
+                        channelId, 
+                        message,
+                        {
+                            'randomize': randomize,
+                            'randomMentions': mentions,
+                            'pollTitle': pollTitle,
+                            'pollAnswers': pollAnswers,
+                            'allmention': allmention,
+                            'addRandomLanguage': addRandomLanguage
+                        }
+                    );
+                    
+                    if (success) messageCount++;
+                    if (messageCount >= limit) {
+                        appendLog('✅ 指定数に達しました');
+                        break;
+                    }
+                    
+                    if (delay) await sleep(delay * 1000);
+                }
+            };
+        });
+        
+        await Promise.all(sendPromises.map(send => send()));
+        
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('loading');
+        stopBtn.disabled = true;
+        submitBtn.textContent = '実行';
+        appendLog('✅ 完了');
+    });
+
+    stopBtn.addEventListener('click', () => {
+        shouldStopSpam = true;
+        appendLog('🛑 スパムを停止します...');
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('loading');
+        submitBtn.textContent = '実行';
+    });
+
+    leaveBtn.addEventListener('click', async () => {
+        shouldStopSpam = true;
+        stopBtn.disabled = true;
+        appendLog('🛑 スパムを停止します...');
+        
+        const tokens = parseList(tokensInput.value);
+        const guildId = guildInput.value.trim();
+        
+        if (!tokens.length) return appendLog('⚠️ トークンを入力してください');
+        if (!guildId) return appendLog('⚠️ サーバーIDを入力してください');
+        
+        for (const token of tokens) {
+            await leaveGuild(token, guildId);
+        }
+        
+        appendLog('✅ 退出処理完了');
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('loading');
+        submitBtn.textContent = '実行';
+    });
+
+    document.getElementById('messageFile').addEventListener('change', function(e) {
+      const fileName = this.files[0] ? this.files[0].name : 'ファイルが選択されていません';
+      const label = document.getElementById('fileInputLabel');
+      const nameDisplay = document.getElementById('fileName');
+      
+      nameDisplay.textContent = fileName;
+      
+      if (this.files[0]) {
+        label.classList.add('has-file');
+        nameDisplay.style.color = '#48bb78';
+      } else {
+        label.classList.remove('has-file');
+        nameDisplay.style.color = '#e53e3e';
+      }
+    });
+
+    const languageOptions = document.querySelectorAll('.language-option');
+    languageOptions.forEach(option => {
+      option.addEventListener('click', function(e) {
+        if (e.target.type !== 'checkbox') {
+          const checkbox = this.querySelector('input[type="checkbox"]');
+          checkbox.checked = !checkbox.checked;
+          this.classList.toggle('selected', checkbox.checked);
+        } else {
+          this.classList.toggle('selected', e.target.checked);
+        }
+      });
+    });
+
+    const messageOptionBtns = document.querySelectorAll('.message-option-btn');
+    const fileInputContainer = document.getElementById('fileInputContainer');
+    const textInputContainer = document.getElementById('textInputContainer');
+    
+    messageOptionBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const option = this.getAttribute('data-option');
+        
+        messageOptionBtns.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        
+        fileInputContainer.classList.remove('active');
+        textInputContainer.classList.remove('active');
+        
+        if (option === 'file') {
+          fileInputContainer.classList.add('active');
+        } else {
+          textInputContainer.classList.add('active');
+        }
+        
+        checkFormValidity();
+      });
+    });
+  </script>
+</body>
+</html>
